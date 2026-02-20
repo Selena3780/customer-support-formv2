@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Support Form</title>
+  <style>
+    /* ===== Base page styles ===== */
+    body {
+      font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background-color: #f9f9f9;
+      padding-top: 60px;   /* Adjust if your header height changes */
+      padding-bottom: 50px; /* Adjust to match the footer height */
+    }
+    h2 { background-color: #004080; color: white; padding: 15px; border-radius: 5px; text-align: center; margin-top: 10px; }
+    .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #ffffff; }
+    label { display: block; margin-top: 10px; color: #002147; font-weight: bold; }
+    .normal { display: block; margin-top: 5px; color: #002147; }
+    textarea { width: 100%; height: 200px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-top: 10px; }
+    .styled-button { background-color: #FF6F00; color: white; padding: 12px 22px; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px; }
+    #settlementSection ul li {
+  margin-bottom: 10px; /* adjust spacing as needed */
+  line-height: 1.4;    /* optional: improves readability */
+}
+    .styled-button:hover { background-color: #e65c00; }
+
+    .blue-button {
+      background-color: #004080; 
+      color: white;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .blue-button:hover { background-color: #004080; }
+    .blue-button:disabled { background-color: #004080; cursor: not-allowed; }
+
+    .hidden { display: none; }
+    strong { color: #FF6F00; }
+    input[type="text"] { width: 600px; max-width: 100%; padding: 7px; box-sizing: border-box;}
+    input[type="textsml"] { width: 200px; max-width: 100%; padding: 7px; box-sizing: border-box;}
+    .section input[type="number"] { width: 90px; }
+    .section input[type="date"] { width: 120px; }
+    #IBCScripts, #OBCScripts { margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f3f3f3; }
+    #copySummaryBtn:disabled { background-color: #cccccc; cursor: not-allowed; }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background-color: #FF6600;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      z-index: 1000;
+    }
+    .header span { color: #004080; }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%;
+      background-color: #004080;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 10px;
+      font-size: 15px;
+      z-index: 1000;
+    }
+    .footer span { color: #FF6600; }
+
+    /* ================================
+       UNIVERSAL SLIDING SIDEBAR (30% WIDTH)
+       ================================ */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -30%;
+      width: 30%;
+      height: 100%;
+      background-color: #ffffff;
+      box-shadow: -2px 0 6px rgba(0,0,0,0.25);
+      transition: right 0.35s ease;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+
+    .sidebar-header {
+      background-color: #1F4E79;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-header .close-btn {
+      background: #ffffff;
+      color: #1F4E79;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .sidebar-header .close-btn:hover { background: #e6e6e6; }
+
+    .sidebar-content { padding: 18px; overflow-y: auto; flex: 1; }
+    .sidebar-content label { font-weight: bold; margin-top: 12px; display: block; color: #1F4E79; }
+    .sidebar-content input[type="number"],
+    .sidebar-content input[type="date"],
+    .sidebar-content input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .sidebar-calc,
+    .sidebar-content button {
+      background-color: #FF6F00;
+      color: #ffffff;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+    .sidebar-calc:hover,
+    .sidebar-content button:hover { background-color: #e65c00; }
+
+    .recommendation { margin-top: 15px; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; }
+    .recommendation.green { background: #d6f5d6; color: #004f00; }
+    .recommendation.red { background: #fde0e0; color: #8b0000; }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <div class="header">Powered by <span>Bumper</span></div>
+
+  <h2>Customer Support Form</h2>
+
+  <!-- ========================= -->
+  <!-- GENERAL FORM FIELDS -->
+  <!-- ========================= -->
+  <div class="section">
+    <label>Skill Type:</label>
+    <span class="normal"><input type="radio" name="skillType" value="IBC"> Inbound Call</span>
+    <span class="normal"><input type="radio" name="skillType" value="OBC"> Outbound Call</span>
+    <span class="normal"><input type="radio" name="skillType" value="Email"> Email</span>
+    <span class="normal"><input type="radio" name="skillType" value="Live Chat"> Live Chat</span>
+
+    <label>Customer Type:</label>
+    <span class="normal"><input type="radio" name="customerType" value="Account Holder"> Account Holder</span>
+    <span class="normal"><input type="radio" name="customerType" value="Third Party"> Third Party</span>
+    <span class="normal"><input type="radio" name="customerType" value="Service Adviser"> Service Adviser</span>
+
+    <div id="authorisedSection" class="hidden">
+      <label>Authorised?</label>
+      <span class="normal"><input type="radio" name="authorised" value="Yes"> Yes</span>
+      <span class="normal"><input type="radio" name="authorised" value="No"> No</span>
+    </div>
+
+    <div id="thirdPartyNameSection" class="hidden">
+      <label>Third Party Name:</label>
+      <input type="text" id="tpName">
+    </div>
+
+    <div id="reasonForContactSection" class="hidden">
+      <label for="reasonForContact">Reason for contact:</label>
+      <input type="text" id="reasonForContact" name="reasonForContact" />
+    </div>
+
+    <label>Contact Type:</label>
+    <span class="normal"><input type="radio" name="contactType" value="Minor Date Change"> Minor Date Change</span>
+    <span class="normal"><input type="radio" name="contactType" value="Cancellation"> Cancellation</span>
+    <span class="normal"><input type="radio" name="contactType" value="Claim"> Claim</span>
+    <span class="normal"><input type="radio" name="contactType" value="Arrangement"> Arrangement</span>
+    <span class="normal"><input type="radio" name="contactType" value="Make a Payment"> Make a Payment</span>
+    <span class="normal"><input type="radio" name="contactType" value="Update Card"> Update Card</span>
+    <span class="normal"><input type="radio" name="contactType" value="Settlement"> Settlement</span>
+  </div>
+
+  <!-- ========================= -->
+  <!-- MINOR DATE CHANGE -->
+  <!-- ========================= -->
+  <div class="section hidden" id="minorDateChangeSection">
+    <p><strong>Minor Date Change Details</strong></p>
+    <p>"Is it just this one instalment you're needing to amend or all future instalments?"</p>
+    <span class="normal"><input type="radio" name="instalmentType" value="One Instalment"> One Instalment</span>
+    <span class="normal"><input type="radio" name="instalmentType" value="All Future Instalments"> All future Instalments</span>
+
+    <label>New Payment Date: <input type="date" id="minorNewDate"></label>
+
+    <p>"I've amended the date as requested. You'll receive an email confirming this shortly."</p>
+    <button class="styled-button" onclick="openSidebar('sidebar')">Arrangement Assistant</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- CANCELLATION -->
+  <!-- ========================= -->
+  <div class="section hidden" id="cancellationSection">
+    <p><strong>Cancellation Request</strong></p>
+
+    <label>Attempt to Cancel:</label>
+    <span class="normal"><input type="radio" name="cancelAttempt" value="1st"> 1st Attempt</span>
+    <span class="normal"><input type="radio" name="cancelAttempt" value="2nd"> 2nd Attempt</span>
+    <span class="normal"><input type="radio" name="cancelAttempt" value="3rd"> 3rd Attempt</span>
+
+    <div id="cancelScript1" class="hidden">
+      <p>"I can help point you in the right direction for who you’ll need to speak with about this."</p>
+      <p>"I'll quickly explain our role so you know what we can support with."</p>
+      <p>"You’ve used Bumper to spread the cost of your purchase into monthly instalments, and we look after collecting those payments."</p>
+      <p>"The company that sold this to you, ‘Partner Name’, is the team you’d need to contact regarding cancellation."</p>
+      <p>"Would you like me to transfer you to them now, or would you prefer their direct number?”</p>
+    </div>
+
+    <div id="cancelScript2" class="hidden">
+      <p>"I can help point you in the right direction for who you’ll need to speak with about this."</p>
+      <p>"I'll quickly explain our role so you know what we can support with."</p>
+      <p>"You’ve used Bumper to spread the cost of your purchase into monthly instalments, and we look after collecting those payments."</p>
+      <p>"The company that sold this to you, ‘Partner Name’, is the team you’d need to contact regarding cancellation."</p>
+      <p>“To make sure your request is handled properly, if you call us again about cancelling, we’ll need to transfer you to the right team, as they’re the ones who can discuss this with you. Would you like me to give you their direct number so you can reach them more easily next time?”</p>
+    </div>
+
+    <div id="cancelScript3" class="hidden">
+      <p>"I can help point you in the right direction for who you’ll need to speak with about this."</p>
+      <p>"I'll quickly explain our role so you know what we can support with."</p>
+      <p>"You’ve used Bumper to spread the cost of your purchase into monthly instalments, and we look after collecting those payments."</p>
+      <p>"The company that sold this to you, ‘Partner Name’, is the team you’d need to contact regarding cancellation."</p>
+      <p>"If you're finding it difficult to get confirmation of cancellation from 'Partner Name', then we can raise this with our escalations team who will assist in contacting them. I can't provide a time frame, however, they'll get back to you as soon as they get a response."</p>
+
+      <h3>Escalated?</h3>
+      <span class="normal"><input type="radio" name="escalated" value="Yes"> Yes</span>
+      <span class="normal"><input type="radio" name="escalated" value="No" checked> No</span>
+
+      <div id="escalationDetails" class="hidden">
+        <label>Reason for cancellation: <input type="text" id="cancelReason"></label>
+        <label>What action has the customer already taken: <textarea id="cancelCustomerAction" rows="2"></textarea></label>
+
+        <p><strong>Escalations Only:</strong> Ensure you log a ticket using the Launch button on CXone.</p>
+      </div>
+    </div>
+
+    <h3>Is the customer also looking to move their next payment date?</h3>
+    <p>"We can look to move the next payment date to give you some time to contact 'Partner Name' to cancel."</p>
+    <span class="normal"><input type="radio" name="cancelDateChange" value="Yes"> Yes</span>
+    <span class="normal"><input type="radio" name="cancelDateChange" value="No" checked> No</span>
+
+    <div id="cancelDateChangeDetails" class="hidden">
+      <label>Reason for Date Change: <input type="text" id="cancelDateReason"></label>
+      <label>New Payment Date: <input type="date" id="cancelNewDate"></label>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- CLAIM -->
+  <!-- ========================= -->
+  <div class="section hidden" id="claimSection">
+    <p><strong>Claim Request</strong></p>
+    <p>"I can help point you in the right direction for who you’ll need to speak with about this."</p>
+    <p>"I'll quickly explain our role so you know what we can support with."</p>
+    <p>"You’ve used Bumper to spread the cost of your policy into monthly instalments, and we look after collecting those payments."</p>
+    <p>"The company who sold you the policy, ‘Partner Name’ is the team you’d need to contact regarding this. When the policy was set up, they should have provided information on how to make a claim and who to speak with."</p>
+    <p>"Would you like me to transfer you to them now, or would you prefer their direct number?”</p>
+  </div>
+
+  <!-- ========================= -->
+  <!-- FINANCIAL ASSESSMENT (Part 1 of Arrangement) -->
+  <!-- ========================= -->
+  <div class="section hidden forbearance-related" id="financialAssessmentSection">
+    <p><strong>Financial Assessment</strong></p>
+    <p>"Because we'll be discussing changing the repayments, I’d like to ask a few questions to understand your situation better and see what support we can offer."</p>
+
+    <p>"Before we continue, is it okay if I make a note on your account of the information you share with me today?"</p>
+
+    <p>"Would you mind telling me more about what’s led to the difficulty with making the repayments?"</p>
+    <label>Reason for difficulty: <input type="text" id="difficulty"></label>
+
+    <p>"What sort of income are you currently receiving?"</p>
+    <p>"Are you receiving any support from the government?"</p>
+    <label>Income: <input type="text" id="employment"></label>
+
+    <p>"Can you think of any other costs you have at the moment that we should factor in to this?"</p>
+    <label>Other expenses: <input type="text" id="commitments"></label>
+
+    <p>"It sounds like things have been a bit challenging financially at the moment, and I know it's not always easy to talk about these things, so I appreciate you sharing that with me."</p>
+    <p>"Would you say the change to your affordability feels short-term and things are likely to improve soon, or more long-term, meaning it might take longer to get things back on track?"</p>
+
+    <label>Expected change in situation:</label>
+    <span class="normal"><input type="radio" name="change" value="Unsure"> Unsure</span>
+    <span class="normal"><input type="radio" name="change" value="Long"> Long</span>
+    <span class="normal"><input type="radio" name="change" value="Short"> Short</span>
+  </div>
+
+  <!-- ========================= -->
+  <!-- TEMPORARY FORBEARANCE (Short-Term) -->
+  <!-- ========================= -->
+  <div class="section hidden forbearance-related" id="tempSection">
+    <p><strong>Temporary Forbearance</strong></p>
+    <p>"From what you've shared, a temporary arrangement sounds like the best option to help ease things over the next couple of months. This would run for two months at an amount that feels affordable for you right now."</p>
+    <p>"Does that sound like something that could work for you?"</p>
+    <p>"Can I just confirm what amount feels manageable for you over the next two months?"</p>
+
+    <label>Amount:
+      <input type="number" id="tempPayment" min="0" step="0.01" inputmode="decimal">
+    </label>
+
+    <p>"When would you like the payments to be collected?"</p>
+    <label>Start Date:
+      <input type="date" id="tempStart">
+    </label>
+
+    <div style="margin-top:10px;">
+      <button class="styled-button" type="button" onclick="showTempArrangementSummary()">Show Temporary Arrangement Summary</button>
+    </div>
+
+    <div id="tempArrangementSummary" class="hidden" style="margin-top:12px;">
+      <h4>Summarise Contact</h4>
+      <p id="tempSummaryText" style="white-space:pre-line;"></p>
+    </div>
+
+    <div id="afterTempBlock" class="hidden"></div>
+
+    <h4>After Temporary Forbearance</h4>
+    <p>"Now that we've set that up, it's important we also look ahead to what a more permanent solution might look like."</p>
+
+    <label>Your outstanding balance now is currently:
+      <input type="number" id="tempOutstandingNow" min="0" step="0.01" placeholder="e.g. 1200.00" inputmode="decimal">
+    </label>
+
+    <label>Your temporary arrangement will end on:
+      <input type="date" id="tempSecondDueDate">
+    </label>
+
+    <div style="margin:8px 0 14px 0;">
+      <button class="styled-button" type="button" onclick="calcOutstanding()">Calculate Outstanding Balance</button>
+    </div>
+
+    <div id="afterTempNextSteps" class="hidden" style="border-top:1px solid #eee; padding-top:10px;">
+      <p>
+        "Once your second payment has been collected, this will leave you with
+        <strong id="postTempAfterBalance">—</strong> outstanding."
+      </p>
+
+      <p>"What amount do you feel would be manageable to pay each month once the temporary arrangement ends?"</p>
+
+      <label>Amount:
+        <input type="number" id="tempAfford" min="0" step="0.01" inputmode="decimal">
+      </label>
+
+      <div style="margin:8px 0 14px 0;">
+        <button class="styled-button" type="button" id="reviewArrangementBtn" onclick="reviewArrangement()">Review Arrangement</button>
+      </div>
+
+      <label>Stages:
+        <input type="number" id="tempStages" min="1" step="1" inputmode="numeric">
+      </label>
+      <label>Start Date:
+        <input type="date" id="tempAfterStart">
+      </label>
+ 
+      <p><strong>Note:</strong> If the Calculator suggests Financial Support, select 'Unsure'- "Unfortunately, that amount isn’t something we’d be able to agree as a long‑term arrangement right now" continue to summarise call. 
+      <label>Outcome:</label>
+      <span class="normal"><input type="radio" name="calculatorOutcome" value="tempArrangementAgreed"> Arrangement Agreed</span>
+      <span class="normal"><input type="radio" name="calculatorOutcome" value="tempUnsure"> Unsure</span>
+
+      <div id="tempFSMessage" class="hidden" style="background:#fff7e6;border:1px solid #ffe2a8;padding:8px 10px;border-radius:6px;margin-top:8px;">
+        <p><strong>Note:</strong> Calculator suggests <em>Financial Support</em>. Please select <em>Unsure</em>.
+      </div>
+
+      <div id="longTermSummary" class="hidden" style="margin-top:12px;">
+        <h4>Summarise Contact</h4>
+        <p id="longTermSummaryText" style="white-space:pre-line;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- GENERIC SUMMARY -->
+  <!-- ========================= -->
+  <div id="genericSummary" class="hidden">
+    <h4>Summarise Contact</h4>
+    <p>"We’ll put the temporary arrangement in place for now to support you for the next couple of months, and when that completes we'll get back in touch to discuss your circumstances at that time, and see what options we have available for you."</p>
+    <p>"If anything changes and the payment becomes difficult, please contact us as soon as possible and we can review the arrangement with you if needed."</p>
+    <p>"Is there anything else you’d like to discuss today?"</p>
+    <p>"Thank you for your time, and we’re here if you need anymore support."</p>
+  </div>
+
+  <!-- ========================= -->
+  <!-- LONG-TERM FORBEARANCE -->
+  <!-- ========================= -->
+  <div class="section hidden forbearance-related" id="longSection">
+    <p><strong>Long-Term Forbearance</strong></p>
+    <p>"From what you’ve told me, it sounds like things might be affected for more than a couple of months, so a longer‑term arrangement is likely the best option."</p>
+    <p>"We’ll check a few details together, we'll look at your outstanding balance, the original term, and when the agreement was completed, and then talk about what feels affordable for you each month."</p>
+    <p>"I’ll gather those details now. While I do that, can you let me know what amount you feel would be affordable? Once I’ve got that, I can put it into the system and see what options it gives us."</p>
+
+    <button class="styled-button" type="button" onclick="openSidebar('sidebar')">Arrangement Assistant</button>
+
+    <div class="section-note" style="margin-top:10px;">
+      <p><strong>Note:</strong> Input the arrangement details that have been agreed with the customer below, unless FS has been referred.</p>
+    </div>
+
+    <label>Amount: <input type="number" id="longAfford" inputmode="decimal"></label>
+    <label>Stages: <input type="number" id="longMonths" inputmode="numeric"></label>
+    <label>Start Date: <input type="date" id="longStartDate"></label>
+
+    <label>Outcome:</label>
+    <span class="normal"><input type="radio" name="longCalculatorOutcome" value="longArrangementAgreed"> Arrangement Agreed</span>
+    <span class="normal"><input type="radio" name="longCalculatorOutcome" value="longFinancialSupport"> Financial Support Agreed</span>
+  </div>
+
+  <div id="longArrangementSummary" class="hidden" style="margin-top:12px;">
+    <h4>Summarise Contact</h4>
+    <p id="longArrangementText"></p>
+  </div>
+
+  <div id="financialSupportSummaryLong" class="hidden" style="margin-top:12px;">
+    <h4>Summarise Contact</h4>
+    <p>"The next step is for you to complete a short affordability form. This helps us understand your income and essential expenses so we can make sure what we're offering you is manageable."</p>
+    <p>"To give you time to complete the form, we'll place your account on hold for 5 working days. It's important you complete the affordability form as soon as possible. After those 5 days, the hold will be removed and your account will follow the normal collections process again."</p>
+    <p>"Once we've received and reviewed the form, our Financial Support team will come back to you with a proposed arrangement that's suitable for your situation."
+    <p>"Is everything I’ve said clear so far? Is there anything else you’d like to discuss today?"</p>
+    <p>"Thank you for your time, and we’re here if you need anymore support."</p>
+    <label>Current Loan Status: <input type="textsml" id="loanstatus" placeholder="e.g. Default Notice"></label>
+    <label>Reason for referring FS: <input type="text" id="reasonFS"></label>
+    <p><strong>Reminder:</strong> Please make sure you submit the form below so the customer receives their affordability form by email.</p> 
+  </div>
+
+  <div id="financialSupportButtonWrapper" class="hidden" style="margin: 30px 0;">
+    <button type="button" class="styled-button" onclick="openFinancialSupportPage()">Submit Affordability Form</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- UNSURE PATH -->
+  <!-- ========================= -->
+  <div class="section hidden forbearance-related" id="unsureSection" style="margin-top:12px;">
+    <p><strong>Unsure</strong></p>
+    <p>"We’ll discuss a couple of options that we have available to support you."</p>
+    <p>"We'll look at your outstanding balance, the original term, and when the agreement was completed, and then talk about what feels affordable for you each month."</p>
+    <p>"If a long-term arrangement doesn't seem suitable right now, then we’ll also see what a two‑month temporary arrangement would look like and discuss in more detail."</p>
+    <p>"I’ll gather those details now. While I do that, can you let me know what monthly amount you feel would be affordable? Once I’ve got that, I can put it into the system and see what options it gives us."</p>
+
+    <div style="margin-top: 30px;"></div>
+    <p><strong>Long‑Term Arrangement:</strong></p>
+
+    <button class="styled-button" type="button" onclick="openSidebar('sidebar')">Arrangement Assistant</button>
+
+    <div class="section-note" style="margin-top:10px;">
+      <p><strong>Note:</strong> Input the arrangement details that have been agreed with the customer below, unless FS has been referred. Please also consider discussing a Temporary Arrangement before proceeding with FS, if this seems like a sensible option.</p>
+    </div>
+
+    <label>Amount: <input type="number" id="longAfford_unsure" inputmode="decimal"></label>
+    <label>Stages: <input type="number" id="longMonths_unsure" inputmode="numeric"></label>
+
+    <p>"When would you like the payments to be collected?"</p>
+    <label>Start Date: <input type="date" id="longStartDate_unsure"></label>
+
+    <div style="margin-top: 30px;"></div>
+    <p><strong>Temporary Arrangement:</strong></p>
+    <p>"A temporary arrangement could also be an option to help ease things over the next couple of months. This would run for two months at the amount that feels affordable for you right now."</p>
+    <p>"Does that sound like something that could work for you instead?"</p>
+    <label>Amount: <input type="number" id="tempPayment_unsure" inputmode="decimal"></label>
+
+    <p>"When would you like the payments to be collected?"</p>
+    <label>Start Date: <input type="date" id="tempStart_unsure"></label>
+
+    <div style="margin-top: 30px;"></div>
+    <p><strong>Outcome:</strong></p>
+    <span class="normal"><input type="radio" name="unsureOutcome" value="unsureLong"> Long Term Arrangement Agreed</span>
+    <span class="normal"><input type="radio" name="unsureOutcome" value="unsureTemp"> Temporary Arrangement Agreed</span>
+    <span class="normal"><input type="radio" name="unsureOutcome" value="unsureFS"> Financial Support Agreed</span>
+  </div>
+
+  <div id="unsureLongSummary" class="hidden" style="margin-top:12px;">
+    <h4>Summarise Contact</h4>
+    <p id="unsureLongText" style="white-space:pre-line;"></p>
+  </div>
+
+  <div id="unsureTempSummary" class="hidden" style="margin-top:12px;">
+    <h4>Temporary Arrangement Summary</h4>
+    <p id="unsureTempText" style="white-space:pre-line;"></p>
+  </div>
+
+  <div id="unsureFSSummary" class="hidden" style="margin-top:12px;">
+    <h4>Summarise Contact</h4>
+    <p id="unsureFSText"></p>
+
+    <label>Current Loan Status: <input type="textsml" id="loanstatus_unsure" placeholder="e.g. Default Notice"></label>
+    <label>Reason for referring FS: <input type="text" id="reasonFS_unsure"></label>
+    <p><strong>Reminder:</strong> Please make sure you submit the form below so the customer receives their affordability form by email.</p>
+
+    <div style="margin: 30px 0;">
+      <button type="button" class="styled-button" onclick="openFinancialSupportPage()">Submit Affordability Form</button>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- MAKE A PAYMENT -->
+  <!-- ========================= -->
+  <div class="section hidden" id="makeapaymentSection">
+    <p><strong>Make a Payment</strong></p>
+    <label>Amount: <input type="number" id="paymentAmount" inputmode="decimal"></label>
+
+    <p><strong>Card Updated?</strong></p>
+    <span class="normal"><input type="radio" name="cardUpdated" value="Yes"> Yes</span>
+    <span class="normal"><input type="radio" name="cardUpdated" value="No"> No</span>
+    <span class="normal"><input type="radio" name="cardUpdated" value="Used the card already registered to the Account."> Card on Account</span>
+  </div>
+
+  <!-- ========================= -->
+  <!-- SETTLEMENT SECTION -->
+  <!-- ========================= -->
+  <div class="section hidden" id="settlementSection">
+    <p><strong>Settlement</strong></p>
+    <p>"Let’s go through your account and see what options we have. If a settlement is available, I’ll confirm the details for you."</p>
+
+    <div style="background:#f3f3f3;padding:12px;border-radius:5px;margin-bottom:12px;">
+      <strong>Settlement Rules</strong>
+      <ul class="settlement-list">
+        <li><strong>Important:</strong> The offer sent to the customer has a 60% discount, this should be the only offer discussed, unless raised with a manager.</li>
+        <li>Settlement offers can be discussed with accounts in the following status: <strong>DCA returned</strong> OR <strong>Settlement offer</strong>.</li>
+        <li>The customer must either pay the full settlement amount on the same day or by the 5th of the following month.</li>
+        <li>Or split the settlement amount into 2 instalments, paid across the current and following month.</li>
+        <li>If neither option is possible, the customer will need to repay the full outstanding balance to the third party Debt Purchaser.</li>
+        <li>Even if the customer settles the application, a Default will remain on their credit file for 6 years. When reported to TransUnion, the account will be marked as Fully Satisfied.</li>
+      </ul>
+      <p><strong>Bank Transfer Details (UK):</strong></p>
+      <ul>
+        <li>Sort code: 30-65-22</li>
+        <li>Account number: 86134668</li>
+        <li>Reference: Application ID</li>
+      </ul>
+    </div>
+
+    <button class="styled-button" onclick="openSettlementSidebar()">Settlement Assistant</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- NOTE SUMMARY -->
+  <!-- ========================= -->
+  <div class="section" id="noteSummarySection">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <button type="button" class="blue-button" onclick="generateSummary()">Generate Note</button>
+      <button type="button" class="blue-button" id="copySummaryBtn" onclick="copySummary()" disabled>Copy</button>
+      <span id="copyStatus" role="status" aria-live="polite" style="color:#006100; font-weight:bold; visibility:hidden;">Copied!</span>
+    </div>
+    <h3>Note Summary:</h3>
+    <textarea id="summaryBox" readonly></textarea>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">Powered by <span>Bumper</span></div>
+
+  <!-- ========================= -->
+  <!-- ARRANGEMENT ASSISTANT SIDEBAR (UNIFIED) -->
+  <!-- ========================= -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      Arrangement Assistant
+      <button class="close-btn" onclick="closeSidebar('sidebar')">Close</button>
+    </div>
+    <div class="sidebar-content">
+      <label for="balanceSidebar">Outstanding Balance:</label>
+      <input type="number" id="balanceSidebar" placeholder="Enter outstanding balance" inputmode="decimal">
+
+      <label for="productSidebar">Product (months):</label>
+      <input type="number" id="productSidebar" placeholder="Enter product term (e.g., 6, 9, 12)" inputmode="numeric">
+
+      <label for="signedDateSidebar">Signed Date:</label>
+      <input type="date" id="signedDateSidebar">
+
+      <label for="todayDateSidebar">Today's Date:</label>
+      <input type="date" id="todayDateSidebar" readonly>
+
+      <label for="suggestedPaymentSidebar">Suggested Monthly Payment:</label>
+      <input type="number" id="suggestedPaymentSidebar" placeholder="Enter the amount the customer suggests they can afford to pay monthly" inputmode="decimal">
+
+      <button class="sidebar-calc" onclick="calculateSidebar()">Calculate</button>
+ 
+      <div class="output">
+        <p><strong>Required Monthly Payment:</strong> <span id="maxOfferSidebar"></span></p>
+        <p class="note"><em>This is the lowest monthly payment we can accept. If the customer's suggested payment is more, accept their offer without discussing this figure.</em></p>
+        <p><strong>Months Elapsed:</strong> <span id="monthsElapsedSidebar"></span></p>
+        <p class="note"><em>This is the time that has already passed since the customer signed their agreement.</em></p>
+        <p><strong>Remaining Months Allowed:</strong> <span id="remainingMonthsSidebar"></span></p>
+        <p class="note"><em>This reflects the months that have already elapsed and the maximum time we are able to give the customer to repay their outstanding balance.</em></p>
+        <p><strong>Arrangement stages:</strong> <span id="monthsNeededSidebar"></span></p>
+        <p class="note"><em>This is the number of stages the agent will set up based on the amount entered in the Suggested Monthly Payment field.</em></p>
+      </div>
+
+      <div id="recommendationSidebar" class="recommendation"></div>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- POST-TEMP ARRANGEMENT ASSISTANT SIDEBAR (UNIFIED) -->
+  <!-- ========================= -->
+  <div id="postSidebar" class="sidebar">
+    <div class="sidebar-header">
+      Arrangement Assistant - After Temporary Forbearance
+      <button class="close-btn" onclick="closeSidebar('postSidebar')">Close</button>
+    </div>
+    <div class="sidebar-content">
+      <label for="balancePostSidebar">Outstanding Balance:</label>
+      <input type="number" id="balancePostSidebar" placeholder="Enter outstanding balance" inputmode="decimal">
+
+      <label for="productPostSidebar">Product (months):</label>
+      <input type="number" id="productPostSidebar" placeholder="Enter product term (e.g., 6, 9, 12)" inputmode="numeric">
+
+      <label for="signedDatePostSidebar">Signed Date:</label>
+      <input type="date" id="signedDatePostSidebar">
+
+      <label for="todayDatePostSidebar">Today's Date:</label>
+      <input type="date" id="todayDatePostSidebar" readonly>
+
+      <label for="suggestedPaymentPostSidebar">Suggested Monthly Payment:</label>
+      <input type="number" id="suggestedPaymentPostSidebar" placeholder="Enter suggested monthly payment" inputmode="decimal">
+
+      <button class="sidebar-calc" onclick="calculatePostSidebar()">Calculate</button>
+
+      <div class="output">
+        <p><strong>Required Monthly Payment:</strong> <span id="maxOfferPostSidebar"></span></p>
+        <p class="note"><em>This is the lowest monthly payment we can accept. If the customer's suggested payment is more, accept their offer without discussing this figure.</em></p>
+        <p><strong>Months Elapsed:</strong> <span id="monthsElapsedPostSidebar"></span></p>
+        <p class="note"><em>This is the time that has already passed since the customer signed their agreement.</em></p>
+        <p><strong>Remaining Months Allowed:</strong> <span id="remainingMonthsPostSidebar"></span></p>
+        <p class="note"><em>This reflects the months that have already elapsed and the maximum time we are able to give the customer to repay their outstanding balance.</em></p>
+        <p><strong>Arrangement stages:</strong> <span id="monthsNeededPostSidebar"></span></p>
+        <p class="note"><em>This is the number of stages the agent will set up based on the amount entered in the Suggested Monthly Payment field.</em></p>
+      </div>
+
+      <div id="recommendationPostSidebar" class="recommendation"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- SETTLEMENT ASSISTANT SIDEBAR (UNIFIED) -->
+  <!-- ========================= -->
+  <div id="settlementSidebar" class="sidebar">
+    <div class="sidebar-header">
+      Settlement Assistant
+      <button class="close-btn" onclick="closeSidebar('settlementSidebar')">Close</button>
+    </div>
+    <div class="sidebar-content">
+      <label>How many applications does the customer have?</label>
+      <span class="normal"><input type="radio" name="appCount" value="1"> 1</span>
+      <span class="normal"><input type="radio" name="appCount" value="2"> 2</span>
+      <span class="normal"><input type="radio" name="appCount" value="3"> 3</span>
+
+      <label>Settlement Discount:</label>
+      <span class="normal"><input type="radio" name="discount" value="0.6"> 60%</span>
+      <span class="normal"><input type="radio" name="discount" value="0.7"> 70%</span>
+      <span class="normal"><input type="radio" name="discount" value="0.8"> 80%</span>
+
+      <div id="applicationsContainer"></div>
+
+      <label>Outcome:</label>
+      <span class="normal"><input type="radio" name="setOutcome" value="Same Day OR Following Month"> Same Day OR Following Month</span>
+      <span class="normal"><input type="radio" name="setOutcome" value="Split into Instalments"> Split into Instalments</span>
+      <span class="normal"><input type="radio" name="setOutcome" value="No Agreement"> No Agreement</span>
+      
+<div class="actions-row">
+      <button type="button" class="styled-button" onclick="openSettlementLink()">Submit Settlement</button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ========================= -->
+  <!-- SCRIPTS -->
+  <!-- ========================= -->
+  <script>
+    // ---------- Universal sidebar open/close ----------
+    function openSidebar(id) {
+      document.getElementById(id)?.classList.add('open');
+    }
+    function closeSidebar(id) {
+      document.getElementById(id)?.classList.remove('open');
+    }
+
+    // ---------- Helpers ----------
+    function $(id){ return document.getElementById(id); }
+    function getVal(id){ return $(id)?.value || ""; }
+    function getChecked(name){ return document.querySelector(`input[name='${name}']:checked`)?.value || ""; }
+    const safeNum = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+    const fmtGBP = (n) => {
+      const num = Number(n);
+      return isFinite(num) ? `£${num.toLocaleString('en-GB',{minimumFractionDigits:2, maximumFractionDigits:2})}` : '–';
+    };
+    function formatDateUK(dateStr){
+      if(!dateStr) return '___';
+      const d=new Date(dateStr);
+      return isNaN(d)?'___':d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    }
+
+    // ---------- Skill Type Toggle (safe guarded) ----------
+    function toggleSkillScripts(){
+      const skill = getChecked("skillType");
+      const ibc = $("IBCScripts"); const obc = $("OBCScripts");
+      if (ibc && obc) {
+        if (skill === "IBC") { ibc.classList.remove("hidden"); obc.classList.add("hidden"); }
+        else if (skill === "OBC") { obc.classList.remove("hidden"); ibc.classList.add("hidden"); }
+        else { ibc.classList.add("hidden"); obc.classList.add("hidden"); }
+      }
+    }
+    document.querySelectorAll("input[name='skillType']").forEach(r => r.addEventListener("change", toggleSkillScripts));
+
+    // ---------- Contact Type Routing (Arrangement fixed) ----------
+    function toggleContactTypeSections(){
+      const type = getChecked("contactType");
+      const ids = ["minorDateChangeSection","cancellationSection","claimSection","financialAssessmentSection","tempSection","longSection","unsureSection","makeapaymentSection","settlementSection"];
+      ids.forEach(id => $(id)?.classList.add("hidden"));
+
+      if (type === "Arrangement") {
+        $("financialAssessmentSection")?.classList.remove("hidden");
+        toggleSections();
+      }
+      if (type === "Minor Date Change") $("minorDateChangeSection")?.classList.remove("hidden");
+      if (type === "Cancellation")      $("cancellationSection")?.classList.remove("hidden");
+      if (type === "Claim")             $("claimSection")?.classList.remove("hidden");
+      if (type === "Make a Payment")    $("makeapaymentSection")?.classList.remove("hidden");
+      if (type === "Settlement")        $("settlementSection")?.classList.remove("hidden");
+    }
+    document.querySelectorAll("input[name='contactType']").forEach(el => el.addEventListener("change", toggleContactTypeSections));
+
+    // ---------- Short / Long / Unsure Routing ----------
+    function toggleSections(){
+      const change = getChecked("change");
+      const showShort  = (change === "Short");
+      const showLong   = (change === "Long");
+      const showUnsure = (change === "Unsure");
+      $("tempSection")?.classList.toggle("hidden", !showShort);
+      $("longSection")?.classList.toggle("hidden", !showLong);
+      $("unsureSection")?.classList.toggle("hidden", !showUnsure);
+    }
+    document.querySelectorAll("input[name='change']").forEach(el => el.addEventListener("change", toggleSections));
+
+    // ---------- Cancellation Attempt ----------
+    function toggleCancelAttempt(){
+      const attempt = getChecked("cancelAttempt");
+      ["cancelScript1","cancelScript2","cancelScript3"].forEach(id => $(id)?.classList.add("hidden"));
+      const map = {"1st":"cancelScript1","2nd":"cancelScript2","3rd":"cancelScript3"};
+      const scriptId = map[attempt];
+      if (scriptId) $(scriptId)?.classList.remove("hidden");
+      if (attempt !== "3rd") {
+        $("escalationDetails")?.classList.add("hidden");
+        document.querySelectorAll("input[name='escalated']").forEach(r => r.checked = (r.value === "No"));
+      }
+    }
+    document.querySelectorAll("input[name='cancelAttempt']").forEach(el => el.addEventListener("change", toggleCancelAttempt));
+
+    function toggleEscalationSection(){ $("escalationDetails")?.classList.toggle("hidden", getChecked("escalated") !== "Yes"); }
+    document.querySelectorAll("input[name='escalated']").forEach(el => el.addEventListener("change", toggleEscalationSection));
+
+    function toggleCancelDateChange(){ $("cancelDateChangeDetails")?.classList.toggle("hidden", getChecked("cancelDateChange") !== "Yes"); }
+    document.querySelectorAll("input[name='cancelDateChange']").forEach(el => el.addEventListener("change", toggleCancelDateChange));
+
+    // ---------- Temp Outcome Toggle (Agreed/Unsure) ----------
+    function toggleCalcOutcomeSection(){
+      const outcome = getChecked("calculatorOutcome");
+      $("longTermSummary")?.classList.toggle("hidden", outcome !== "tempArrangementAgreed");
+      $("genericSummary")?.classList.toggle("hidden", outcome !== "tempUnsure");
+    }
+    document.querySelectorAll("input[name='calculatorOutcome']").forEach(el => el.addEventListener("change", toggleCalcOutcomeSection));
+
+    // ---------- Long-Term Outcome Toggle ----------
+    function toggleLongTermOutcomeSection() {
+      const outcome = getChecked("longCalculatorOutcome");
+
+      $("longArrangementSummary")?.classList.toggle("hidden", outcome !== "longArrangementAgreed");
+      $("financialSupportSummaryLong")?.classList.toggle("hidden", outcome !== "longFinancialSupport");
+      $("financialSupportButtonWrapper")?.classList.toggle("hidden", outcome !== "longFinancialSupport");
+
+      if (outcome === "longArrangementAgreed") {
+        const amt = getVal("longAfford") || "(amount)";
+        const mons = getVal("longMonths") || "(months)";
+        const start = getVal("longStartDate") || "(start date)";
+
+        const summary = [
+          `We'll set up ${mons} payments of ${fmtGBP(amt)}, starting ${formatDateUK(start)}. They'll be collected from the card currently on the account.`,
+          `Once this has been set up, it will be reported to the credit reference agencies as an Arrangement to Pay. This ensures your credit file reflects the payment plan accurately.`,
+          `**Customer questions the ATP** "An Arrangement to Pay simply reflects that the payments you’re making are different from the original agreement. We can’t comment on what the credit reference agencies do with that information, but it’s important to know you’re still making regular payments under an agreed plan, and that’s what this marker shows."`,
+          `Is everything I’ve said clear so far? I’m happy to go over anything again.`,
+          `You’ll receive confirmation of the arrangement this evening, so you don’t need to remember everything from today.`,
+          `If anything changes and the payment becomes difficult, please contact us as soon as possible and we can review the arrangement with you if needed.`,
+          `Is there anything else you’d like to discuss today?`,
+          `Thank you for your time, and we’re here if you need anymore support.`
+        ].join("\n\n");
+
+        $("longArrangementText").innerText = summary;
+      }
+    }
+    document.querySelectorAll("input[name='longCalculatorOutcome']").forEach(el => el.addEventListener("change", toggleLongTermOutcomeSection));
+
+    // ---------- Financial Support external page ----------
+    function openFinancialSupportPage(){
+      const url = "https://forms.office.com/pages/responsepage.aspx?id=-0tah_kdSEm-vtBvG-SytjH_MnFj2EJJlZFUb4eh7wFURUQ4REdTWFo2N1hURUszU1NUS1NaNFFQNi4u";
+      window.open(url, "_blank");
+    }
+
+    // ---------- Customer Type visibility ----------
+    document.querySelectorAll('input[name="customerType"]').forEach(radio => {
+      radio.addEventListener('change', function(){
+        const authorisedSection = $('authorisedSection');
+        const thirdPartyNameSection = $('thirdPartyNameSection');
+        const reasonSection = $('reasonForContactSection');
+        if (this.value === 'Service Adviser') {
+          reasonSection.classList.remove('hidden');
+          authorisedSection.classList.add('hidden');
+          thirdPartyNameSection.classList.add('hidden');
+        } else if (this.value === 'Third Party') {
+          authorisedSection.classList.remove('hidden');
+          reasonSection.classList.add('hidden');
+          thirdPartyNameSection.classList.toggle('hidden', getChecked("authorised") !== "Yes");
+        } else {
+          authorisedSection.classList.add('hidden');
+          thirdPartyNameSection.classList.add('hidden');
+          reasonSection.classList.add('hidden');
+        }
+      });
+    });
+    document.querySelectorAll('input[name="authorised"]').forEach(radio => {
+      radio.addEventListener('change', function(){
+        $('thirdPartyNameSection')?.classList.toggle("hidden", this.value !== "Yes");
+      });
+    });
+
+    // ---------- Summary Generator ----------
+    function generateSummary() {
+    const skill = getChecked("skillType");
+    const customerType = getChecked("customerType");
+    let summary = "";
+
+    // --- SERVICE ADVISER SHORTCUT ---
+    if (skill === "IBC" && customerType === "Service Adviser") {
+        const reason = getVal("reasonForContact") || "Not provided";
+        $("summaryBox").value = `IBC-SA\nReason for Contact: ${reason}`;
+        updateCopyButtonState();
+        return;
+    }
+
+    // --- BASE INFO ---
+    summary += `Skill Type: ${skill}\nCustomer Type: ${customerType}\n`;
+    if (customerType === "Service Adviser") {
+        summary += `Reason for Contact: ${getVal("reasonForContact") || "Not provided"}\n`;
+    }
+
+    if (customerType === "Third Party") {
+        const auth = getChecked("authorised") || "Not selected";
+        if (auth === "No") {
+            summary += `noauth\n`;
+        } else {
+            summary += `Authorised: Yes\n`;
+            summary += `Third Party Name: ${getVal("tpName") || "Not provided"}\n`;
+        }
+    }
+
+    const contactType = getChecked("contactType") || "";
+    summary += `Contact Type: ${contactType}\n\n`;
+
+    // ============================
+    //   MINOR DATE CHANGE
+    // ============================
+    if (contactType === "Minor Date Change") {
+        summary += `Instalment Type: ${getChecked("instalmentType")}\n`;
+        summary += `New Payment Date: ${formatDateUK(getVal("minorNewDate"))}\n\n`;
+    }
+
+    // ============================
+    //   CANCELLATION
+    // ============================
+    if (contactType === "Cancellation") {
+        summary += `Explained the correct process and company to contact.\n`;
+        summary += `- Attempt: ${getChecked("cancelAttempt")}\n`;
+
+        if (getChecked("cancelDateChange") === "Yes") {
+            summary += `Date Change Requested: Yes\n`;
+            summary += `  Reason: ${getVal("cancelDateReason")}\n`;
+            summary += `  New Payment Date: ${formatDateUK(getVal("cancelNewDate"))}\n`;
+        }
+
+        if (getChecked("cancelAttempt") === "3rd") {
+            const esc = getChecked("escalated");
+            summary += `- Escalated: ${esc}\n`;
+            if (esc === "Yes") {
+                summary += `  Escalation Reason: ${getVal("cancelReason")}\n`;
+                summary += `  Customer Action: ${getVal("cancelCustomerAction")}\n`;
+            }
+        }
+
+        summary += `\n`;
+    }
+
+    // ============================
+    //   CLAIM
+    // ============================
+    if (contactType === "Claim") {
+        summary += `Explained the correct process and company to contact.\n\n`;
+    }
+
+    // ============================
+    //   UPDATE CARD
+    // ============================
+    if (contactType === "Update Card") {
+        summary += `Card has been updated.\n\n`;
+    }
+
+    // ============================
+    //   MAKE A PAYMENT
+    // ============================
+    if (contactType === "Make a Payment") {
+        const cardUpdated = getChecked("cardUpdated");
+        summary += `Amount: £${getVal("paymentAmount")}\n`;
+        summary += cardUpdated === "Used the card already registered to the Account."
+            ? `Used the card already registered to the Account.\n`
+            : `Card Updated?: ${cardUpdated || "Not selected"}\n`;
+    }
+
+    // ============================
+    //   ARRANGEMENT PATHS
+    // ============================
+    if (contactType === "Arrangement") {
+        summary += `Financial Assessment:\n`;
+        summary += `- Reason: ${getVal("difficulty")}\n`;
+        summary += `- Income: ${getVal("employment")}\n`;
+        summary += `- Commitments: ${getVal("commitments")}\n`;
+        summary += `- Expected change: ${getChecked("change")}\n\n`;
+
+        const change = getChecked("change");
+
+        // -- SHORT (TEMPORARY) --
+        if (change === "Short") {
+            summary += `Temporary Forbearance:\n`;
+            summary += `- Payment: £${getVal("tempPayment")}\n`;
+            summary += `- Start: ${formatDateUK(getVal("tempStart"))}\n\n`;
+
+            const outNow = safeNum(getVal("tempOutstandingNow"));
+            const tempPay = safeNum(getVal("tempPayment"));
+            const afterTemp = Math.max(0, outNow - tempPay * 2);
+            summary += `- Outstanding after temp: £${afterTemp.toFixed(2)}\n`;
+
+            const outcome = getChecked("calculatorOutcome");
+            if (outcome === "tempArrangementAgreed") {
+                summary += `Permanent Arrangement:\n`;
+                summary += `- Payment: £${getVal("tempAfford")}\n`;
+                summary += `- Stages: ${getVal("tempStages")}\n`;
+                summary += `- Start: ${formatDateUK(getVal("tempAfterStart"))}\n`;
+            } else {
+                summary += `Outcome pending further discussion.\n`;
+            }
+        }
+
+        // -- LONG TERM --
+        else if (change === "Long") {
+            const longOutcome = getChecked("longCalculatorOutcome");
+
+            if (longOutcome === "longArrangementAgreed") {
+                summary += `Long-Term Arrangement:\n`;
+                summary += `- Amount: £${getVal("longAfford")}\n`;
+                summary += `- Stages: ${getVal("longMonths")}\n`;
+                summary += `- Start: ${formatDateUK(getVal("longStartDate"))}\n`;
+            } else {
+                summary += `Financial Support Agreed.\n`;
+                summary += `- Current Loan Status: ${getVal("loanstatus")}\n`;
+                summary += `- Reason for referring FS: ${getVal("reasonFS")}\n`;
+            }
+        }
+
+        // -- UNSURE PATH --
+        else if (change === "Unsure") {
+            const unsure = getChecked("unsureOutcome");
+
+            if (unsure === "unsureLong") {
+                summary += `Long-Term Arrangement Agreed:\n`;
+                summary += `- Amount: £${getVal("longAfford_unsure")}\n`;
+                summary += `- Stages: ${getVal("longMonths_unsure")}\n`;
+                summary += `- Start: ${formatDateUK(getVal("longStartDate_unsure"))}\n`;
+            }
+
+            else if (unsure === "unsureTemp") {
+                summary += `Temporary Arrangement Agreed:\n`;
+                summary += `- Amount: £${getVal("tempPayment_unsure")}\n`;
+                summary += `- Start: ${formatDateUK(getVal("tempStart_unsure"))}\n`;
+            }
+
+            else if (unsure === "unsureFS") {
+                summary += `Financial Support Agreed:\n`;
+                summary += `- Current Loan Status: ${getVal("loanstatus_unsure")}\n`;
+                summary += `- Reason for referring FS: ${getVal("reasonFS_unsure")}\n`;
+            }
+        }
+    }
+
+    // ============================
+    //   ⭐ SETTLEMENT (unchanged except formatting)
+    // ============================
+    if (contactType === "Settlement") {
+
+        const apps = document.querySelectorAll(".appBlock");
+        const numberOfApps = apps.length;
+
+        const discount = getSettlementDiscount() || "Not selected";
+        const outcome = getChecked("setOutcome") || "Not selected";
+
+        summary += `Settlement Discussion:\n`;
+        summary += `- Number of Applications: ${numberOfApps}\n`;
+        summary += `- Discount Offered: ${discount === "Not selected" ? "Not selected" : (discount * 100) + "%" }\n`;
+
+        apps.forEach((app, index) => {
+
+            const appID = app.querySelector(".appID").value || "Not provided";
+            const balance = app.querySelector(".appBalance").value || "0";
+            const settlement = app.querySelector(".settlementValue").innerText || "0.00";
+            const paymentDate = formatDateUK(app.querySelector(".appPaymentDate").value);
+
+            summary += `  Application ${index + 1}:\n`;
+            summary += `   - Application ID: ${appID}\n`;
+            summary += `   - Outstanding Balance: £${balance}\n`;
+            summary += `   - Settlement Figure: £${settlement}\n`;
+            summary += `   - Outcome: ${outcome}\n`;
+            summary += `   - Agreed Payment Date: ${paymentDate}\n`;
+        });
+
+        summary += `\n`;
+    }
+
+    // Final output
+    $("summaryBox").value = summary;
+    updateCopyButtonState();
+}
+
+    document.querySelectorAll("input[name='calculatorOutcome']").forEach(radio => {
+      radio.addEventListener("change", function () {
+        if (this.value === "tempArrangementAgreed") {
+          let amount = document.getElementById("tempAfford").value;
+          const stages = document.getElementById("tempStages").value || "—";
+          const start  = document.getElementById("tempAfterStart").value || "—";
+
+          if (amount && !isNaN(amount)) {
+            amount = parseFloat(amount).toFixed(2);
+          } else { amount = "—"; }
+
+          const formattedStart = start !== "—"
+            ? new Date(start).toLocaleDateString("en-GB")
+            : "—";
+
+          const text = `
+"We'll note on your account that after the temporary arrangement completes, the new arrangement will begin."
+
+"We’ll set up ${stages} payments of £${amount}, starting on ${formattedStart} and they'll be collected from the card currently on the account."
+
+"This will also be reported to the credit reference agencies as an Arrangement to Pay."
+
+"If anything changes and the payment becomes difficult, please contact us as soon as possible, and we can review the arrangement with you if needed."
+
+"Is there anything else you’d like to discuss today?"
+
+"Thank you for your time, and we’re here if you need anymore support."
+          `.trim();
+
+          document.getElementById("longTermSummaryText").textContent = text;
+          document.getElementById("longTermSummary").classList.remove("hidden");
+        }
+      });
+    });
+
+    // =======================
+    // UNSURE PATH SUMMARIES
+    // =======================
+    document.querySelectorAll("input[name='unsureOutcome']").forEach(radio => {
+      radio.addEventListener("change", function () {
+        $("unsureLongSummary")?.classList.add("hidden");
+        $("unsureTempSummary")?.classList.add("hidden");
+        $("unsureFSSummary")?.classList.add("hidden");
+
+        const v = this.value;
+
+        if (v === "unsureLong") {
+          const mons  = getVal("longMonths_unsure") || "(months)";
+          const amt   = getVal("longAfford_unsure") ? fmtGBP(getVal("longAfford_unsure")) : "(amount)";
+          const start = formatDateUK(getVal("longStartDate_unsure"));
+
+          const txt = 
+`We'll set up ${mons} payments of ${amt}, starting ${start}. They'll be collected from the card currently on the account.
+
+"Once this has been set up, it will be reported to the credit reference agencies as an Arrangement to Pay. This ensures your credit file reflects the payment plan accurately."
+
+"**Customer questions the ATP** "An Arrangement to Pay simply reflects that the payments you’re making are different from the original agreement. We can’t comment on what the credit reference agencies do with that information, but it’s important to know you’re still making regular payments under an agreed plan, and that’s what this marker shows."
+
+"Is everything I’ve said clear so far? I’m happy to go over anything again."
+
+"You’ll receive confirmation of the arrangement this evening, so you don’t need to remember everything from today."
+
+"If anything changes and the payment becomes difficult, please contact us as soon as possible and we can review the arrangement with you if needed."
+
+"Is there anything else you’d like to discuss today?"
+
+"Thank you for your time, and we’re here if you need anymore support."`;
+
+          $("unsureLongText").innerText = txt;
+          $("unsureLongSummary").classList.remove("hidden");
+          $("unsureLongSummary").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        if (v === "unsureTemp") {
+          const amt   = getVal("tempPayment_unsure") ? fmtGBP(getVal("tempPayment_unsure")) : "(amount)";
+          const start = formatDateUK(getVal("tempStart_unsure"));
+
+          const txt =
+`"We’ll set up two payments of ${amt}, starting on ${start} and they'll be collected from the card currently on the account."
+
+"Once this has been set up, it will be reported to the credit reference agencies as an Arrangement to Pay. This ensures your credit file reflects the payment plan accurately."
+
+"**Customer questions the ATP** "An Arrangement to Pay simply reflects that the payments you’re making are different from the original agreement. We can’t comment on what the credit reference agencies do with that information, but it’s important to know you’re still making regular payments under an agreed plan, and that’s what this marker shows."
+
+"When that arrangement completes, we'll get back in touch to discuss your circumstances at that time, and see what options we have available for you."
+
+"Is everything I’ve said clear so far? I’m happy to go over anything again."
+
+"You’ll receive confirmation of the arrangement this evening, so you don’t need to remember everything from today."
+
+"If anything changes and the payment becomes difficult, please contact us as soon as possible and we can review the arrangement with you if needed."
+
+"Is there anything else you’d like to discuss today?"
+
+"Thank you for your time, and we’re here if you need anymore support."`;
+
+          $("unsureTempText").innerText = txt;
+          $("unsureTempSummary").classList.remove("hidden");
+          $("unsureTempSummary").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        if (v === "unsureFS") {
+          const txt =
+`"The next step is for you to complete a short affordability form. This helps us understand your income and essential expenses so we can make sure what we're offering you is manageable."
+
+"To give you time to complete the form, we'll place your account on hold for 5 working days. It's important you complete the affordability form as soon as possible. After those 5 days, the hold will be removed and your account will follow the normal collections process again."
+
+"Once we've received and reviewed the form, our Financial Support team will come back to you with a proposed arrangement that's suitable for your situation."
+
+"Is everything I’ve said clear so far? Is there anything else you’d like to discuss today?"
+
+"Thank you for your time, and we’re here if you need anymore support."`;
+
+          $("unsureFSText").innerText = txt;
+          $("unsureFSSummary").classList.remove("hidden");
+
+          const loanStatusUnsure = $("loanstatus_unsure");
+          if (loanStatusUnsure) {
+            loanStatusUnsure.focus();
+            const longFSStatus = $("loanstatus");
+            if (longFSStatus) {
+              loanStatusUnsure.addEventListener("input", () => {
+                longFSStatus.value = loanStatusUnsure.value;
+              }, { once: true });
+            }
+          }
+          $("unsureFSSummary")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+      });
+    });
+
+    // ---------- Initial load ----------
+    function setTodayDate(id){
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth()+1).padStart(2,'0');
+      const dd = String(today.getDate()).padStart(2,'0');
+      $(id).value = `${yyyy}-${mm}-${dd}`;
+    }
+    window.addEventListener("load", () => {
+      toggleSkillScripts();
+      toggleContactTypeSections();
+      toggleCancelAttempt();
+      toggleCancelDateChange();
+      toggleSections();
+      toggleCalcOutcomeSection();
+      toggleLongTermOutcomeSection();
+      updateCopyButtonState();
+      // Set today's date for both sidebars
+      if ($("todayDateSidebar")) setTodayDate('todayDateSidebar');
+      if ($("todayDatePostSidebar")) setTodayDate('todayDatePostSidebar');
+    });
+
+    // ---------- Arrangement Assistant calculations ----------
+function calculateSidebar(){
+  const balance = parseFloat($('balanceSidebar').value);
+  const product = parseInt($('productSidebar').value);
+  const signedDateVal = $('signedDateSidebar').value;
+  const suggestedPayment = parseFloat($('suggestedPaymentSidebar').value);
+
+  if (isNaN(balance) || isNaN(product) || isNaN(suggestedPayment) || !signedDateVal) {
+    alert('Please fill in all required fields correctly.');
+    return;
+  }
+
+  const signedDate = new Date(signedDateVal);
+  const todayDate = new Date($('todayDateSidebar').value);
+
+  const maxAllowedMonths = ([9,10,11,12].includes(product)) ? 18 : 12;
+  const monthsElapsed = (todayDate.getFullYear() - signedDate.getFullYear()) * 12 + (todayDate.getMonth() - signedDate.getMonth());
+  const remainingMonths = Math.max(0, maxAllowedMonths - monthsElapsed);
+
+  let maxOffer = '';
+  let monthsNeeded = '';
+  let recText = '';
+  let recClass = '';
+
+  if (remainingMonths > 0) {
+    maxOffer = (balance / remainingMonths).toFixed(2);
+
+    // ⭐ NEW: calculate and round arrangement stages
+    const rawStages = balance / suggestedPayment;
+    const roundedStages = Math.round(rawStages);
+    monthsNeeded = roundedStages;
+
+    if (suggestedPayment >= parseFloat(maxOffer)) { 
+      recText = 'Arrangement Accepted'; 
+      recClass = 'green'; 
+    } else { 
+      recText = 'Financial Support'; 
+      recClass = 'red'; 
+    }
+  } else {
+    maxOffer = 'Arrangement Not Possible';
+    monthsNeeded = 'N/A';
+    recText = 'Exceeded Maximum Allowed Period';
+    recClass = 'red';
+  }
+
+  $('maxOfferSidebar').innerText = maxOffer;
+  $('monthsElapsedSidebar').innerText = monthsElapsed;
+  $('remainingMonthsSidebar').innerText = remainingMonths;
+  $('monthsNeededSidebar').innerText = monthsNeeded;
+
+  const recDiv = $('recommendationSidebar');
+  recDiv.innerText = recText;
+  recDiv.className = 'recommendation ' + recClass;
+
+  // ⭐ NEW: Auto‑calculate ATP
+  calculateFinalATP();
+}
+
+function calculateFinalATP() {
+  const balance = parseFloat($('balanceSidebar').value);
+  const stagesRaw = parseFloat($('monthsNeededSidebar').innerText);
+
+  if (isNaN(balance) || isNaN(stagesRaw) || stagesRaw <= 0) {
+    const el = $('finalATP');
+    if (el) el.value = '';
+    return;
+  }
+
+  const stages = Math.round(stagesRaw);
+  const finalATP = balance / stages;
+
+  // --- Ensure field exists only after Calculate is pressed ---
+  let atpField = document.getElementById("finalATP");
+
+  if (!atpField) {
+    // Find the Calculate button in the main sidebar
+    const calculateBtn = document.querySelector("#sidebar .sidebar-calc");
+
+    // Create label
+    const label = document.createElement("label");
+    label.innerHTML = "<strong>Final ATP Amount:</strong>";
+    label.style.marginTop = "12px";
+
+    // Create input
+    atpField = document.createElement("input");
+    atpField.type = "text";
+    atpField.id = "finalATP";
+    atpField.readOnly = true;
+    atpField.style.marginBottom = "8px";
+
+    // Insert directly under Calculate button
+    calculateBtn.insertAdjacentElement("afterend", label);
+    label.insertAdjacentElement("afterend", atpField);
+  }
+
+  // Update ATP value
+  atpField.value = `£${finalATP.toFixed(2)} (using ${stages} stages)`;
+}
+
+    // ---------- Settlement Assistant ----------
+    function openSettlementSidebar(){ openSidebar('settlementSidebar'); }
+    function closeSettlementSidebar(){ closeSidebar('settlementSidebar'); }
+
+    function getSettlementDiscount(){ return parseFloat(document.querySelector("input[name='discount']:checked")?.value || 0); }
+
+    document.querySelectorAll("input[name='appCount']").forEach(r => r.addEventListener("change", renderApplications));
+    document.querySelectorAll("input[name='discount']").forEach(r => r.addEventListener("change", calculateSettlements));
+
+    function renderApplications() {
+  const count = parseInt(document.querySelector("input[name='appCount']:checked")?.value || 0);
+  const container = $("applicationsContainer");
+  container.innerHTML = "";
+
+  for (let i = 1; i <= count; i++) {
+    container.innerHTML += `
+      <div class="appBlock" data-app="${i}" style="margin-top:15px; border-top:1px solid #ddd; padding-top:10px;">
+        <label>Application ID:</label>
+        <input type="text" class="appID">
+
+        <label>Outstanding Balance (£):</label>
+        <input type="number" class="appBalance" oninput="calculateSettlements()" inputmode="decimal">
+
+        <p><strong>Settlement Figure:</strong> £<span class="settlementValue">0.00</span></p>
+
+        <label>Agreed Payment Date:</label>
+        <input type="date" class="appPaymentDate">
+      </div>
+    `;
+  }
+}
+
+    function calculateSettlements() {
+  const discount = getSettlementDiscount();
+  if (!discount) return;
+
+  document.querySelectorAll(".appBlock").forEach(block => {
+    const balanceInput = block.querySelector(".appBalance");
+    const settlementSpan = block.querySelector(".settlementValue");
+
+    const balance = parseFloat(balanceInput.value) || 0;
+    settlementSpan.innerText = (balance * (1 - discount)).toFixed(2);
+  });
+}
+
+    document.querySelectorAll("input[name='setOutcome']").forEach(r => r.addEventListener("change", toggleSettlementPaymentDate));
+    function toggleSettlementPaymentDate(){
+      const outcome = document.querySelector("input[name='setOutcome']:checked")?.value;
+      const section = $("settlementPaymentDateSection");
+      if (outcome === "Same Day OR Following Month" || outcome === "Split into Instalments") { section.classList.remove("hidden"); }
+      else { section.classList.add("hidden"); $('settlementPaymentDate').value = ""; }
+    }
+
+    function openSettlementLink(){
+      // Use the SharePoint link you provided; opens in a new tab
+      window.open("https://autoservicefinance.sharepoint.com/:x:/s/company/IQCYMhsrgKH2T6xDxe65eflyARsRqcebGSx18Tb9Ogzkhxw?e=uS3hot", "_blank");
+    }
+
+    // ---------- Logic for post temp sidebar ----------
+function calculatePostSidebar() {
+  const balance = parseFloat($('balancePostSidebar').value);
+  const product = parseInt($('productPostSidebar').value);
+  const signedDateVal = $('signedDatePostSidebar').value;
+  const suggestedPayment = parseFloat($('suggestedPaymentPostSidebar').value);
+
+  if (isNaN(balance) || isNaN(product) || isNaN(suggestedPayment) || !signedDateVal) {
+    alert('Please fill in all required fields correctly.');
+    return;
+  }
+
+  const signedDate = new Date(signedDateVal);
+  const todayDate = new Date($('todayDatePostSidebar').value);
+
+  const maxAllowedMonths = ([9, 10, 11, 12].includes(product)) ? 18 : 12;
+  const monthsElapsed =
+    (todayDate.getFullYear() - signedDate.getFullYear()) * 12 +
+    (todayDate.getMonth() - signedDate.getMonth());
+
+  const remainingMonths = Math.max(0, maxAllowedMonths - monthsElapsed);
+
+  let maxOffer = '';
+  let monthsNeeded = '';
+  let recText = '';
+  let recClass = '';
+
+  if (remainingMonths > 0) {
+    maxOffer = (balance / remainingMonths).toFixed(2);
+
+    const rawStages = balance / suggestedPayment;
+    const roundedStages = Math.round(rawStages);
+    monthsNeeded = roundedStages;
+
+    if (suggestedPayment >= parseFloat(maxOffer)) {
+      recText = 'Arrangement Accepted';
+      recClass = 'green';
+    } else {
+      recText = 'Financial Support';
+      recClass = 'red';
+    }
+  } else {
+    maxOffer = 'Arrangement Not Possible';
+    monthsNeeded = 'N/A';
+    recText = 'Exceeded Maximum Allowed Period';
+    recClass = 'red';
+  }
+
+  $('maxOfferPostSidebar').innerText = maxOffer;
+  $('monthsElapsedPostSidebar').innerText = monthsElapsed;
+  $('remainingMonthsPostSidebar').innerText = remainingMonths;
+  $('monthsNeededPostSidebar').innerText = monthsNeeded;
+
+  const recDiv = $('recommendationPostSidebar');
+  recDiv.innerText = recText;
+  recDiv.className = 'recommendation ' + recClass;
+
+  calculateFinalATP_Post();
+}
+
+function calculateFinalATP_Post() {
+  const balance = parseFloat($('balancePostSidebar').value);
+  const stagesRaw = parseFloat($('monthsNeededPostSidebar').innerText);
+
+  if (isNaN(balance) || isNaN(stagesRaw) || stagesRaw <= 0) {
+    const el = $('finalATP_Post');
+    if (el) el.value = '';
+    return;
+  }
+
+  const stages = Math.round(stagesRaw);
+  const finalATP = balance / stages;
+
+  let atpField = document.getElementById("finalATP_Post");
+
+  if (!atpField) {
+    const calculateBtn = document.querySelector("#postSidebar .sidebar-calc");
+
+    const label = document.createElement("label");
+    label.innerHTML = "<strong>Final ATP Amount:</strong>";
+    label.style.marginTop = "12px";
+
+    atpField = document.createElement("input");
+    atpField.type = "text";
+    atpField.id = "finalATP_Post";
+    atpField.readOnly = true;
+    atpField.style.marginBottom = "8px";
+
+    calculateBtn.insertAdjacentElement("afterend", label);
+    label.insertAdjacentElement("afterend", atpField);
+  }
+
+  atpField.value = `£${finalATP.toFixed(2)} (using ${stages} stages)`;
+}
+    // ---------- TEMPORARY ARRANGEMENT SUMMARY ----------
+    function showTempArrangementSummary(){
+      const amount = $('tempPayment')?.value || '';
+      const startDate = $('tempStart')?.value || '';
+      const amountText = amount ? `£${Number(amount).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '£___';
+      const startText = formatDateUK(startDate);
+
+      const lines = [
+        `"We’ll set up two payments of ${amountText}, starting on ${startText} and they'll be collected from the card currently on the account."`,
+        `"Once this has been set up, it will be reported to the credit reference agencies as an Arrangement to Pay. This ensures your credit file reflects the payment plan accurately."`,
+        `"**Customer questions the ATP** "An Arrangement to Pay simply reflects that the payments you’re making are different from the original agreement. We can’t comment on what the credit reference agencies do with that information, but it’s important to know you’re still making regular payments under an agreed plan, and that’s what this marker shows."`,
+        `"Is everything I’ve said clear so far? I’m happy to go over anything again."`,
+        `"You’ll receive confirmation of the arrangement this evening, so you don’t need to remember everything from today."`
+      ];
+
+      const out = $('tempSummaryText');
+      const wrap = $('tempArrangementSummary');
+      if (out && wrap) {
+        out.textContent = lines.join('\n\n');
+        wrap.classList.remove('hidden');
+      }
+      $('afterTempBlock')?.classList.remove('hidden');
+    }
+
+    function calcOutstanding(){
+      const outstandingNow = safeNum($('tempOutstandingNow')?.value);
+      const tempMonthly    = safeNum($('tempPayment')?.value);
+      const afterTemp = Math.max(0, outstandingNow - (tempMonthly * 2));
+
+      const fmt = (n) => `£${Number(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      if ($('postTempAfterBalance')) $('postTempAfterBalance').textContent = fmt(afterTemp);
+
+      const secondDue = $('tempSecondDueDate')?.value || '';
+      if ($('tempAfterStart') && !$('tempAfterStart').value && secondDue) $('tempAfterStart').value = secondDue;
+
+      $('afterTempNextSteps')?.classList.remove('hidden');
+    }
+
+    // ---------- Date helpers for 2nd instalment ----------
+    function addMonths(dateStr, monthsToAdd){
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d)) return '';
+      const day = d.getDate();
+      d.setMonth(d.getMonth() + monthsToAdd);
+      if (d.getDate() < day) d.setDate(0);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function setSecondDueDefault(){
+      const start = $('tempStart')?.value;
+      if (!start) return;
+      const second = addMonths(start, 1);
+      const secondEl = $('tempSecondDueDate');
+      if (secondEl && !secondEl.value) secondEl.value = second;
+      if ($('tempAfterStart') && !$('tempAfterStart').value) $('tempAfterStart').value = secondEl?.value || second || '';
+    }
+
+    // ---------- Review Arrangement ----------
+    function reviewArrangement(){
+      openPostSidebar();
+    }
+
+    // ---------- Post-Temp Assistant (prefill + open unified) ----------
+    function openPostSidebar(){
+      const outstandingNow = safeNum($('tempOutstandingNow')?.value);
+      const tempMonthly    = safeNum($('tempPayment')?.value);
+      const afterTemp = Math.max(0, outstandingNow - (tempMonthly * 2));
+
+      if ($('balancePostSidebar')) $('balancePostSidebar').value = afterTemp.toFixed(2);
+
+      const lastTempDate = $('tempSecondDueDate')?.value || '';
+      if ($('todayDatePostSidebar')) $('todayDatePostSidebar').value = lastTempDate || $('todayDatePostSidebar').value;
+
+      const permProposal = $('tempAfford')?.value || '';
+      if ($('suggestedPaymentPostSidebar')) $('suggestedPaymentPostSidebar').value = permProposal;
+
+      openSidebar('postSidebar');
+    }
+
+    // ---------- Keep dates aligned ----------
+    document.addEventListener('DOMContentLoaded', () => {
+      const tempStartEl = $('tempStart');
+      if (tempStartEl) tempStartEl.addEventListener('change', setSecondDueDefault);
+
+      const secondEl = $('tempSecondDueDate');
+      if (secondEl) secondEl.addEventListener('change', () => {
+        const val = secondEl.value;
+        if ($('tempAfterStart') && !$('tempAfterStart').value) $('tempAfterStart').value = val;
+      });
+    });
+
+    // ---------- Copy to Clipboard ----------
+    function updateCopyButtonState(){
+      const box = $('summaryBox'); const btn = $('copySummaryBtn');
+      if (!btn || !box) return;
+      btn.disabled = !box.value.trim();
+    }
+    function showCopyStatus(message='Copied!'){
+      const s = $('copyStatus'); if (!s) return;
+      s.textContent = message; s.style.visibility = 'visible';
+      setTimeout(()=>{ s.style.visibility = 'hidden'; }, 1500);
+    }
+    async function copySummary(){
+      const textarea = $('summaryBox'); if (!textarea) return;
+      const text = textarea.value; if (!text.trim()){ showCopyStatus('Nothing to copy'); return; }
+      if (navigator.clipboard && window.isSecureContext) {
+        try { await navigator.clipboard.writeText(text); showCopyStatus('Copied!'); return; } catch(e){}
+      }
+      try {
+        const wasReadOnly = textarea.readOnly; textarea.readOnly = false;
+        textarea.focus(); textarea.select(); textarea.setSelectionRange(0, text.length);
+        const success = document.execCommand('copy');
+        textarea.setSelectionRange(0,0); textarea.blur(); textarea.readOnly = wasReadOnly;
+        showCopyStatus(success ? 'Copied!' : 'Press Ctrl/Cmd+C to copy');
+      } catch(err){ showCopyStatus('Press Ctrl/Cmd+C to copy'); }
+    }
+  </script>
+</body>
+</html>
