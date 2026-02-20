@@ -151,12 +151,13 @@
 <body>
   <!-- HEADER -->
   <div class="header">Powered by <span>Bumper</span></div>
-
+  <button type="button" class="blue-button" onclick="resetForm()">Reset Form</button>
   <h2>Customer Support Form</h2>
 
   <!-- ========================= -->
   <!-- GENERAL FORM FIELDS -->
   <!-- ========================= -->
+  
   <div class="section">
     <label>Skill Type:</label>
     <span class="normal"><input type="radio" name="skillType" value="IBC"> Inbound Call</span>
@@ -1575,6 +1576,9 @@ function calculateFinalATP_Post() {
         showCopyStatus(success ? 'Copied!' : 'Press Ctrl/Cmd+C to copy');
       } catch(err){ showCopyStatus('Press Ctrl/Cmd+C to copy'); }
     }
+function resetForm() {
+  location.reload();
+}
   </script>
 </body>
 </html>
