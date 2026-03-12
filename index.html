@@ -151,6 +151,7 @@
 <body>
   <!-- HEADER -->
   <div class="header">Powered by <span>Bumper</span></div>
+  <button type="button" class="blue-button" onclick="resetForm()">Reset Form</button>
 
   <h2>Customer Support Form</h2>
 
@@ -1670,6 +1671,9 @@ function calculateFinalATP_Post() {
         showCopyStatus(success ? 'Copied!' : 'Press Ctrl/Cmd+C to copy');
       } catch(err){ showCopyStatus('Press Ctrl/Cmd+C to copy'); }
     }
+function resetForm() {
+  location.reload();
+}
   </script>
 </body>
 </html>
