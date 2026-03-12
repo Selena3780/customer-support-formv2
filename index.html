@@ -151,13 +151,12 @@
 <body>
   <!-- HEADER -->
   <div class="header">Powered by <span>Bumper</span></div>
-  <button type="button" class="blue-button" onclick="resetForm()">Reset Form</button>
+
   <h2>Customer Support Form</h2>
 
   <!-- ========================= -->
   <!-- GENERAL FORM FIELDS -->
   <!-- ========================= -->
-  
   <div class="section">
     <label>Skill Type:</label>
     <span class="normal"><input type="radio" name="skillType" value="IBC"> Inbound Call</span>
@@ -194,6 +193,8 @@
     <span class="normal"><input type="radio" name="contactType" value="Make a Payment"> Make a Payment</span>
     <span class="normal"><input type="radio" name="contactType" value="Update Card"> Update Card</span>
     <span class="normal"><input type="radio" name="contactType" value="Settlement"> Settlement</span>
+    <span class="normal"><input type="radio" name="contactType" value="Fraud"> Fraud</span>
+    <span class="normal"><input type="radio" name="contactType" value="Debt Solution"> Debt Solution</span>
   </div>
 
   <!-- ========================= -->
@@ -278,6 +279,72 @@
     <p>"You’ve used Bumper to spread the cost of your policy into monthly instalments, and we look after collecting those payments."</p>
     <p>"The company who sold you the policy, ‘Partner Name’ is the team you’d need to contact regarding this. When the policy was set up, they should have provided information on how to make a claim and who to speak with."</p>
     <p>"Would you like me to transfer you to them now, or would you prefer their direct number?”</p>
+  </div>
+
+  <!-- ========================= -->
+  <!-- Fraud -->
+  <!-- ========================= -->
+  <div class="section hidden" id="fraudSection">
+    <p><strong>Fraud</strong></p>
+    <p>"Thank you for sharing your concerns about this agreement. I apologise for the situation, and I understand how concerning it must be for you."</p>
+    <p>"We'll gather some information from you so our Escalations Team can review the case thoroughly. They'll perform the necessary checks and get back to you with the next steps."</p>
+    <p>"To begin, I just need to ask you a few questions so we can fully understand what’s happened."</p>
+
+    <p>"How did you become aware of this account?"</p><label><input type="text" id="fraud1"></label>
+    <p></p>
+    <p>"Have you ever visited [PARTNER NAME] previously?"</p><label><input type="text" id="fraud2"></label
+    <p></p>
+    <p>"Have there been any payments collected from your card by Bumper?"</p><label><input type="text" id="fraud3"></label
+    <p></p>
+    <p>"Do you recognise the Vehicle registration? (IF applicable)"</p><label><input type="text" id="fraud4"></label>
+    <p></p>
+    <p>"Do you know of anyone who may have had access to your personal details?"</p><label><input type="text" id="fraud5"></label
+    <p></p>
+    <p>"Have you noticed any other unusual or unexpected activity on your accounts or credit file?"</p><label><input type="text" id="fraud6"></label
+    <p></p>
+    <p>"Would you mind providing us with your contact details? Our Escalations team will need to contact you again regarding this."</p>
+    <p></p>
+    <p>Callers Mobile:</p><label><input type="text" id="fraudmobile"></label
+    <p></p>
+    <p>Callers Email:</p><label><input type="text" id="fraudemail"></label
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <p><strong>Summarise Contact</strong></p>
+    <p>"Thank you for taking the time to go through all of that information with me today. I’ve now gathered everything I need, and I’ll be passing your case to our Escalations Team. They specialise in reviewing situations like this and will carry out the necessary checks."</p>
+    <p>"They’ll contact you within three working days to update you on the next steps and discuss the case in more detail."</p>
+    <p>"If anything changes or you need to provide additional information in the meantime, please don’t hesitate to get in touch. We’re here to help."</p
+
+    <li><strong>If the caller asks about outcomes:</strong></li>
+    <p>"At this stage, the investigation hasn’t been completed, so I’m not able to confirm any outcomes or next steps just yet. Once our Escalations Team has reviewed your case, they’ll be able to answer any questions you have and explain what will happen next."</p>
+    </div>
+
+  <!-- ========================= -->
+  <!-- Debt Solution -->
+  <!-- ========================= -->
+  <div class="section hidden" id="debtSection">
+    <p><strong>Debt Solution</strong></p>
+    <p>"Thank you for getting in touch to let us know. To make sure the account is handled correctly, I'll need to confirm a few details with you."</p>
+
+    <p>"Which company or organisation are you seeking support from?"</p>
+    <label><input type="text" id="company"></label>
+    <p>"Can you please confirm any reference they may have provided you?"</p>
+    <label><input type="text" id="reference"></label>
+    <p>"When did you first contact them? Appox date"</p>
+    <label><input type="date" id="contactdate"></label>
+    <p>"Is there a particular debt solution you are discussing, for example, Budgets, Debt Management Plan, IVA, Debt relief order?"</p>
+    <label><input type="text" id="solution"></label>
+    <p>"Reason for financial difficulty?"</p>
+    <label><input type="text" id="debtdifficulty"></label>
+ 
+    <p><strong>Summarise Contact</strong></p>
+    <p>"We’ve now placed your account on hold for the next 30 days. During this period, we won’t carry out any collections activity or send any communications."</p>
+    <p>"If anything changes in your circumstances during this time, we kindly ask that you let us know so we can offer the most appropriate support."</p>
+    <p>"Should we hear from [Company/Organisation] during this 30‑day period, we will engage with them directly regarding your account. If we do not receive any further communication within the 30 days, we will contact you once the hold expires to discuss your account and the next steps, including any recovery actions that may resume at that point."</p>
+    <p>"Please be assured that our aim is to support you through this process."</p>
+    <p></p>
+    <strong>Important:</strong><label> Please ensure any active RA's are cancelled. Please change the loan status to Financial Difficulty - Informal Breathing Space.</label>
   </div>
 
   <!-- ========================= -->
@@ -727,7 +794,7 @@
     // ---------- Contact Type Routing (Arrangement fixed) ----------
     function toggleContactTypeSections(){
       const type = getChecked("contactType");
-      const ids = ["minorDateChangeSection","cancellationSection","claimSection","financialAssessmentSection","tempSection","longSection","unsureSection","makeapaymentSection","settlementSection"];
+      const ids = ["minorDateChangeSection","cancellationSection","claimSection","financialAssessmentSection","tempSection","longSection","unsureSection","makeapaymentSection","settlementSection","fraudSection","debtSection"];
       ids.forEach(id => $(id)?.classList.add("hidden"));
 
       if (type === "Arrangement") {
@@ -739,6 +806,8 @@
       if (type === "Claim")             $("claimSection")?.classList.remove("hidden");
       if (type === "Make a Payment")    $("makeapaymentSection")?.classList.remove("hidden");
       if (type === "Settlement")        $("settlementSection")?.classList.remove("hidden");
+      if (type === "Fraud")        $("fraudSection")?.classList.remove("hidden");
+      if (type === "Debt Solution")        $("debtSection")?.classList.remove("hidden");
     }
     document.querySelectorAll("input[name='contactType']").forEach(el => el.addEventListener("change", toggleContactTypeSections));
 
@@ -933,6 +1002,31 @@
         summary += cardUpdated === "Used the card already registered to the Account."
             ? `Used the card already registered to the Account.\n`
             : `Card Updated?: ${cardUpdated || "Not selected"}\n`;
+    }
+
+    // ============================
+    //   Fraud
+    // ============================
+    if (contactType === "Fraud") {
+        summary += `- Aware?: ${getVal("fraud1")}\n`;
+        summary += `- Visited partner?: ${getVal("fraud2")}\n`;
+        summary += `- Payments collected?: ${getVal("fraud3")}\n`;
+        summary += `- Recognise vehicle?: ${getVal("fraud4")}\n`;
+        summary += `- Access to person details?: ${getVal("fraud5")}\n`;
+        summary += `- Unusual Activity?: ${getVal("fraud6")}\n`;
+        summary += `- Mobile: ${getVal("fraudmobile")}\n`;
+        summary += `- Email: ${getVal("fraudemail")}\n`;
+    }
+
+    // ============================
+    //   Debt Solution
+    // ============================
+    if (contactType === "Debt Solution") {
+        summary += `- Company: ${getVal("company")}\n`;
+        summary += `- Reference: ${getVal("reference")}\n`;
+        summary += `- Contact Date: ${getVal("contactdate")}\n`;
+        summary += `- Solution: ${getVal("solution")}\n`;
+        summary += `- Difficulty: ${getVal("debtdifficulty")}\n`;
     }
 
     // ============================
@@ -1576,9 +1670,6 @@ function calculateFinalATP_Post() {
         showCopyStatus(success ? 'Copied!' : 'Press Ctrl/Cmd+C to copy');
       } catch(err){ showCopyStatus('Press Ctrl/Cmd+C to copy'); }
     }
-function resetForm() {
-  location.reload();
-}
   </script>
 </body>
 </html>
